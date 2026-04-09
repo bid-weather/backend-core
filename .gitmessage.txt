@@ -7,9 +7,9 @@
 # --- COMMIT TYPE ---
 #   <타입> 리스트
 #   :sparkles: Feat           : 기능 (새로운 기능)
-#   :pencil2: Fix             : 버그 (버그 수정)
+#   :bug: Fix                 : 버그 (버그 수정)
 #   :art: Refactor            : 리팩토링
-#   :ambulance: !Hotfix       : 핫픽스
+#   :rotating_light: !Hotfix  : 핫픽스
 #   :memo: Docs               : 문서 수정 (문서 추가, 수정, 삭제, README)
 #   :wrench: Chore            : 기타 변경사항 (빌드 스크립트 수정, assets, 패키지 매니저 등)
 #   :label: Rename            : 파일 혹은 폴더명을 수정하거나 옮기는 작업만 한 경우
@@ -17,6 +17,9 @@
 #   :rewind: Revert           : 변경 사항 되돌리기
 #   :lipstick: Style          : 스타일 변경 (코드 포맷팅, 세미콜론 누락 등 기능에 영향을 주지 않는 변경)
 #   :construction_worker: CI  : CI 설정 및 스크립트 수정
+#   :white_check_mark: Test   : 테스트 코드 추가/수정
+#   :zap: Perf                : 성능 개선
+#   :lock: Security           : 보안 관련 수정
 
 # ------------------
 #   <제목 - Subject Rule>

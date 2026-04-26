@@ -8,18 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "subcategory")
 @NoArgsConstructor
 @Getter
-public class Category {
-
+public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_name")
-    private String categoryName;
+    @OneToMany(mappedBy = "subcategory")
+    private List<CategorySubcategory> categorySubcategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category")
-    private final List<CategorySubcategory> categorySubcategories = new ArrayList<>();
+    @Column(name = "subcategory_name")
+    private String subcategoryName;
 }

@@ -1,0 +1,16 @@
+INSERT INTO subcategory (subcategory_name) VALUES ('수해/침수 예방');
+INSERT INTO subcategory (subcategory_name) VALUES ('재해 긴급 복구');
+INSERT INTO subcategory (subcategory_name) VALUES ('폭염 및 냉방 지원');
+INSERT INTO subcategory (subcategory_name) VALUES ('가뭄 및 용수 확보');
+INSERT INTO subcategory (subcategory_name) VALUES ('대설 및 제설 작업');
+INSERT INTO subcategory (subcategory_name) VALUES ('혹한 및 동파 방지');
+INSERT INTO subcategory (subcategory_name) VALUES ('지반 및 사면 보강');
+INSERT INTO subcategory (subcategory_name) VALUES ('수목 관리 및 산불 예방');
+INSERT INTO subcategory (subcategory_name) VALUES ('기상 재해 연구 및 설계');
+INSERT INTO subcategory (subcategory_name) VALUES ('재난 경보 및 통신');
+INSERT INTO subcategory (subcategory_name) VALUES ('해양 및 어업 재해');
+INSERT INTO subcategory (subcategory_name) VALUES ('미세먼지 및 황사');
+INSERT INTO subcategory (subcategory_name) VALUES ('감염병 방역 및 보건');
+INSERT INTO subcategory (subcategory_name) VALUES ('농축산 보호 및 방제');
+INSERT INTO subcategory (subcategory_name) VALUES ('수질 악화 및 정수 처리');
+INSERT INTO subcategory (subcategory_name) VALUES ('포트홀 및 싱크홀');

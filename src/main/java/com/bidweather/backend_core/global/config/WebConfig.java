@@ -1,4 +1,4 @@
-package com.bidweather.backend_core.config;
+package com.bidweather.backend_core.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;

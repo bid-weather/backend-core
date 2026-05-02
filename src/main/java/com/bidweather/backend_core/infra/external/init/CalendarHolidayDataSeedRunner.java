@@ -25,7 +25,7 @@ public class CalendarHolidayDataSeedRunner implements ApplicationRunner {
                     calendarHolidayBackfillService.holidayBackfillForMonth(targetYear, month);
                 }
             }
-            log.info("========== [Seed Runner] 공휴일초기화 완료 ==========");
+            log.info("========== [Seed Runner] 공휴일 초기화 완료 ==========");
 
         } catch (Exception e) {
             log.error("공휴일 초기화 중 에러 발생: {}", e.getMessage(), e);

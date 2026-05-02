@@ -65,6 +65,32 @@ public class WeatherDailyBackfillService {
         createWeather(weathers);
     }
 
+    public void weatherBackfillForDate(LocalDate yesterday) {
+        String response = kmaWebClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/typ01/url/kma_sfcdd3.php")
+                        .queryParam("tm1", yesterday.format(DateTimeFormatter.BASIC_ISO_DATE))
+                        .queryParam("tm2", yesterday.format(DateTimeFormatter.BASIC_ISO_DATE))
+                        .queryParam("stn", 108)  // 서울
+                        .queryParam("authKey", externalApiProperties.kmaKey())
+                        .build(false))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        if (response == null || response.isBlank()) {
+            log.debug("날씨 정보 부재: {}", yesterday);
+            return;
+        }
+
+        List<WeatherKmaResponseDto> weathers = Arrays.stream(response.split("\n"))
+                .filter(line -> !line.startsWith("#") && !line.isBlank())
+                .map(WeatherKmaResponseDto::parse)
+                .toList();
+
+        createWeather(weathers);
+    }
+
     private void createWeather(List<WeatherKmaResponseDto> weatherList) {
         List<WeatherDaily> weathers = weatherList.stream()
                 .map(dto -> calendarDateRepository.findById(dto.date())

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "calendar_date")
@@ -35,6 +37,9 @@ public class CalendarDate {
 
     @Column(name = "day_of_year", nullable = false)
     private Integer dayOfYear;
+
+    @OneToMany(mappedBy = "calendarDate", fetch = FetchType.LAZY)
+    private List<WeatherDaily> weatherDailies = new ArrayList<>();
 
     public void markAsHoliday() {
         this.isHoliday = true;

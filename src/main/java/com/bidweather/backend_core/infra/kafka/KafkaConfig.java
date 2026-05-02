@@ -71,4 +71,12 @@ public class KafkaConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic announcementClassificationTopic() {
+        return TopicBuilder.name("announcement-classification")
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 }

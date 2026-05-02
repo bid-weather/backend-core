@@ -19,6 +19,6 @@ public class Subcategory {
     @OneToMany(mappedBy = "subcategory")
     private List<CategorySubcategory> categorySubcategories = new ArrayList<>();
 
-    @Column(name = "subcategory_name")
+    @Column(name = "subcategory_name", nullable = false)
     private String subcategoryName;
 }

@@ -38,6 +38,12 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
 
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html
+    api-docs:
+      path: /api-docs
+
 external:
   api:
     holiday-key: ${HOLIDAY_INFO_API_KEY}

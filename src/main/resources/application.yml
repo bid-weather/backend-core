@@ -24,6 +24,17 @@ spring:
       - classpath:db/migration
       - classpath:db/seed
 
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: prediction-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
 external:
   api:
     holiday-key: ${HOLIDAY_INFO_API_KEY}

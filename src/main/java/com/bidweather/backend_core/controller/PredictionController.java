@@ -1,5 +1,6 @@
 package com.bidweather.backend_core.controller;
 
+import com.bidweather.backend_core.dto.response.GraphDataResponseDto;
 import com.bidweather.backend_core.dto.response.PredictionMonthlyResponseDto;
 import com.bidweather.backend_core.service.query.PredictionQueryService;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,12 @@ public class PredictionController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long subcategoryId) {
         return ResponseEntity.ok(predictionQueryService.findMonthlyPredictions(categoryId, subcategoryId));
+    }
+
+    @GetMapping("/graph")
+    public ResponseEntity<GraphDataResponseDto> getGraphData(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long subcategoryId) {
+        return ResponseEntity.ok(predictionQueryService.getGraphData(categoryId, subcategoryId));
     }
 }

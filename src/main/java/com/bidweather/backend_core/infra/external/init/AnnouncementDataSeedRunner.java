@@ -4,6 +4,7 @@ import com.bidweather.backend_core.infra.external.service.AnnouncementBackfillSe
 import com.bidweather.backend_core.infra.kafka.AnnouncementClassificationKafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -18,11 +19,19 @@ import java.time.YearMonth;
 @RequiredArgsConstructor
 public class AnnouncementDataSeedRunner implements ApplicationRunner {
 
+    @Value("${seed.enabled}")
+    private boolean seedEnabled;
+
     private final AnnouncementBackfillService announcementBackfillService;
     private final AnnouncementClassificationKafkaProducer announcementClassificationKafkaProducer;
 
     @Override
     public void run(ApplicationArguments args) {
+        if (!seedEnabled) {
+            log.info("Seed Runner 비활성화");
+            return;
+        }
+
         log.info("========== [Seed Runner] 입찰공고 초기화 시작 ==========");
         try {
             LocalDate yesterday = LocalDate.now().minusDays(1);

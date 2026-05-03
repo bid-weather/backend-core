@@ -2,6 +2,10 @@ spring:
   application:
     name: backend-core
 
+  docker:
+    compose:
+      enabled: false
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -47,3 +51,6 @@ external:
     holiday-key: ${HOLIDAY_INFO_API_KEY}
     kma-key: ${KMA_WEATHER_API_KEY}
     g2b-key: ${ANNOUNCEMENT_API_KEY}
+
+seed:
+  enabled: ${SEED_ENABLED}

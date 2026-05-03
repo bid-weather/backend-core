@@ -3,6 +3,7 @@ package com.bidweather.backend_core.infra.external.init;
 import com.bidweather.backend_core.infra.external.service.CalendarHolidayBackfillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -14,10 +15,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CalendarHolidayDataSeedRunner implements ApplicationRunner {
 
+    @Value("${seed.enabled}")
+    private boolean seedEnabled;
+
     private final CalendarHolidayBackfillService calendarHolidayBackfillService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        if (!seedEnabled) {
+            log.info("Seed Runner 비활성화");
+            return;
+        }
+
         log.info("========== [Seed Runner] 공휴일 초기화 시작 ==========");
         try {
             for(int targetYear = 2024; targetYear <= 2026; targetYear++) {

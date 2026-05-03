@@ -3,6 +3,7 @@ package com.bidweather.backend_core.infra.external.init;
 import com.bidweather.backend_core.infra.external.service.WeatherDailyBackfillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -16,10 +17,19 @@ import java.time.YearMonth;
 @Order(2)
 @RequiredArgsConstructor
 public class WeatherDailyDataSeedRunner implements ApplicationRunner {
+
+    @Value("${seed.enabled}")
+    private boolean seedEnabled;
+
     private final WeatherDailyBackfillService weatherDailyBackfillService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        if (!seedEnabled) {
+            log.info("Seed Runner 비활성화");
+            return;
+        }
+
         log.info("========== [Seed Runner] 날씨 초기화 시작 ==========");
         try {
             LocalDate yesterday = LocalDate.now().minusDays(1);

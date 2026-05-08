@@ -23,7 +23,7 @@ public class AnnouncementDailyScheduler {
 
         try {
             announcementBackfillService.backfillForDate(yesterday);
-            announcementClassificationKafkaProducer.requestClassification();
+            announcementClassificationKafkaProducer.requestClassification(yesterday);
             log.info("입찰공고 스케줄러 완료: {}", yesterday);
 
         } catch (Exception e) {

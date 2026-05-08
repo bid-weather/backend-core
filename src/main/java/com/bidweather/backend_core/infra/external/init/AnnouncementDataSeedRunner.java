@@ -49,7 +49,7 @@ public class AnnouncementDataSeedRunner implements ApplicationRunner {
                 }
             }
 
-            announcementClassificationKafkaProducer.requestClassification();
+            announcementClassificationKafkaProducer.requestClassification(LocalDate.of(2024, 1, 1));
             log.info("========== [Seed Runner] 입찰공고 초기화 완료 ==========");
 
         } catch (Exception e) {

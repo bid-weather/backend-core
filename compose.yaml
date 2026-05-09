@@ -18,6 +18,8 @@ services:
       - "8080"
     env_file:
       - .env
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       postgres:
         condition: service_healthy
@@ -30,6 +32,9 @@ services:
     build: ../ai-inference-server
     env_file:
       - ../ai-inference-server/.env
+    environment:
+      - TZ=Asia/Seoul
+      - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Seoul
     depends_on:
       postgres:
         condition: service_healthy

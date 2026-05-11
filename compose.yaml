@@ -34,7 +34,6 @@ services:
       - ../ai-inference-server/.env
     environment:
       - TZ=Asia/Seoul
-      - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Seoul
     depends_on:
       postgres:
         condition: service_healthy

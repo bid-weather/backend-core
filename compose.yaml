@@ -34,6 +34,7 @@ services:
       - ../ai-inference-server/.env
     environment:
       - TZ=Asia/Seoul
+      - PYTHONUNBUFFERED=1
     depends_on:
       postgres:
         condition: service_healthy

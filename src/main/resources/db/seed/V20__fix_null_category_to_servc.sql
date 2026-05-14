@@ -1,0 +1,1 @@
+UPDATE announcement SET category_id = 2 WHERE category_id IS NULL;

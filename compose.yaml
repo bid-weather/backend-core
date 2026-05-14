@@ -18,14 +18,35 @@ services:
       - "8080"
     env_file:
       - .env
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
-      - postgres
-      - kafka
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - app-net
+
+  ai-server:
+    build: ../ai-inference-server
+    env_file:
+      - ../ai-inference-server/.env
+    environment:
+      - TZ=Asia/Seoul
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
     networks:
       - app-net
 
   postgres:
-    image: 'postgres:latest'
+    image: 'pgvector/pgvector:pg17'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - 'POSTGRES_DB=${DB_NAME}'
       - 'POSTGRES_PASSWORD=${DB_PASSWORD}'
@@ -34,6 +55,11 @@ services:
       - '5432'
     networks:
       - app-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0

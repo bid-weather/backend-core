@@ -16,7 +16,7 @@ public class PredictionRequestKafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private static final String TOPIC = "announcement-prediction";
 
-    @Scheduled(cron = "0 10 0 * * *")
+    @Scheduled(cron = "0 0 8 * * *")
     public void requestPrediction() {
         String today = LocalDate.now().toString();
         log.info("========== [Kafka] 예측 분석 요청 전송: {} ==========", today);

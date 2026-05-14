@@ -16,14 +16,14 @@ public class AnnouncementDailyScheduler {
     private final AnnouncementBackfillService announcementBackfillService;
     private final AnnouncementClassificationKafkaProducer announcementClassificationKafkaProducer;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 7 * * *")
     public void fetchDailyAnnouncements() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         log.info("입찰공고 스케줄러 시작: {}", yesterday);
 
         try {
             announcementBackfillService.backfillForDate(yesterday);
-            announcementClassificationKafkaProducer.requestClassification();
+            announcementClassificationKafkaProducer.requestClassification(yesterday);
             log.info("입찰공고 스케줄러 완료: {}", yesterday);
 
         } catch (Exception e) {

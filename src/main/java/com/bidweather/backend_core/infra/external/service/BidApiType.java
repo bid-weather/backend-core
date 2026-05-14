@@ -2,8 +2,8 @@ package com.bidweather.backend_core.infra.external.service;
 
 public enum BidApiType {
     CNSTWK(1L, "/getBidPblancListInfoCnstwk"),
-    SERVC(null, "/getBidPblancListInfoServc"),
-    THNG(4L, "/getBidPblancListInfoThng");
+    SERVC(2L, "/getBidPblancListInfoServc"),
+    THNG(3L, "/getBidPblancListInfoThng");
 
     private final Long categoryId;
     private final String path;

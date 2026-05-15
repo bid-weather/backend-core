@@ -1,6 +1,6 @@
 package com.bidweather.backend_core.controller;
 
-import com.bidweather.backend_core.dto.response.SubcategoryResponseDto;
+import com.bidweather.backend_core.dto.response.SubcategoryListResponseDto;
 import com.bidweather.backend_core.service.query.SubcategoryQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class SubcategoryController {
     private final SubcategoryQueryService subcategoryQueryService;
 
     @GetMapping("")
-    public ResponseEntity<SubcategoryResponseDto> getSubcategories() {
+    public ResponseEntity<SubcategoryListResponseDto> getSubcategories() {
         return ResponseEntity.ok(subcategoryQueryService.getAllSubcategories());
     }
 }

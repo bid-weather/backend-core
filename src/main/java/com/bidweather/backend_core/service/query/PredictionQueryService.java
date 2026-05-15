@@ -1,10 +1,11 @@
 package com.bidweather.backend_core.service.query;
 
-import com.bidweather.backend_core.domain.PredictionDaily;
 import com.bidweather.backend_core.dto.response.GraphDataResponseDto;
 import com.bidweather.backend_core.dto.response.PredictionMonthlyResponseDto;
 import com.bidweather.backend_core.repository.AnnouncementRepository;
 import com.bidweather.backend_core.repository.PredictionDailyRepository;
+import com.bidweather.backend_core.repository.projection.DailyCountProjection;
+import com.bidweather.backend_core.repository.projection.MonthlyCountProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,25 +30,18 @@ public class PredictionQueryService {
         LocalDate start = LocalDate.now();
         LocalDate end = start.plusMonths(1).minusDays(1);
 
-        List<PredictionDaily> results;
-
+        List<DailyCountProjection> results;
         if (subcategoryId != null) {
-            results = predictionDailyRepository.findLatestBySubcategoryAndDateRange(subcategoryId, start, end);
+            results = predictionDailyRepository.findLatestDailyBySubcategoryAndDateRange(subcategoryId, start, end);
         } else if (categoryId != null) {
-            results = predictionDailyRepository.findLatestByCategoryAndDateRange(categoryId, start, end);
+            results = predictionDailyRepository.findLatestDailyByCategoryAndDateRange(categoryId, start, end);
         } else {
-            results = predictionDailyRepository.findLatestByDateRange(start, end);
+            results = predictionDailyRepository.findLatestDailyByDateRange(start, end);
         }
 
-        Map<LocalDate, Integer> countByDate = results.stream()
-                .collect(Collectors.groupingBy(
-                        p -> ((com.bidweather.backend_core.domain.PredictionDaily) p).getCalendarDate().getDate(),
-                        Collectors.summingInt(p -> ((com.bidweather.backend_core.domain.PredictionDaily) p).getCount())
-                ));
-
-        List<PredictionMonthlyResponseDto.PredictionDailyResponseDto> predictions = countByDate.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(e -> new PredictionMonthlyResponseDto.PredictionDailyResponseDto(e.getKey(), e.getValue()))
+        List<PredictionMonthlyResponseDto.PredictionDailyResponseDto> predictions = results.stream()
+                .sorted(Comparator.comparing(DailyCountProjection::getPeriod))
+                .map(p -> new PredictionMonthlyResponseDto.PredictionDailyResponseDto(p.getPeriod(), p.getCount()))
                 .toList();
 
         return new PredictionMonthlyResponseDto(predictions);
@@ -56,41 +50,38 @@ public class PredictionQueryService {
     public GraphDataResponseDto getGraphData(Long categoryId, Long subcategoryId) {
         LocalDate today = LocalDate.now();
         YearMonth currentMonth = YearMonth.from(today);
+        LocalDate start = currentMonth.minusMonths(12).atDay(1);
+        LocalDate end = currentMonth.atEndOfMonth();
+
+        List<MonthlyCountProjection> actualResults;
+        if (subcategoryId != null) {
+            actualResults = announcementRepository.countBySubcategoryAndDateRange(subcategoryId, start, end);
+        } else if (categoryId != null) {
+            actualResults = announcementRepository.countByCategoryAndDateRange(categoryId, start, end);
+        } else {
+            actualResults = announcementRepository.countByDateRange(start, end);
+        }
+
+        List<MonthlyCountProjection> predictResults;
+        if (subcategoryId != null) {
+            predictResults = predictionDailyRepository.findLatestBySubcategoryAndDateRange(subcategoryId, start, end);
+        } else if (categoryId != null) {
+            predictResults = predictionDailyRepository.findLatestByCategoryAndDateRange(categoryId, start, end);
+        } else {
+            predictResults = predictionDailyRepository.findLatestByDateRange(start, end);
+        }
+
+        Map<String, Integer> actualMap = actualResults.stream()
+                .collect(Collectors.toMap(MonthlyCountProjection::getPeriod, MonthlyCountProjection::getCount));
+        Map<String, Integer> predictMap = predictResults.stream()
+                .collect(Collectors.toMap(MonthlyCountProjection::getPeriod, MonthlyCountProjection::getCount));
 
         List<GraphDataResponseDto.GraphDetailDto> graphData = new ArrayList<>();
-
         for (int i = -12; i <= 0; i++) {
-            YearMonth targetMonth = currentMonth.plusMonths(i);
-            String period = targetMonth.toString();
-
-            LocalDate startOfMonth = targetMonth.atDay(1);
-            LocalDate endOfMonth = targetMonth.atEndOfMonth();
-
-            Integer actualCount;
-            if (subcategoryId != null) {
-                actualCount = announcementRepository.countBySubcategoryAndDateRange(subcategoryId, startOfMonth, endOfMonth);
-            } else if (categoryId != null) {
-                actualCount = announcementRepository.countByCategoryAndDateRange(categoryId, startOfMonth, endOfMonth);
-            } else {
-                actualCount = announcementRepository.countByDateRange(startOfMonth, endOfMonth);
-            }
-            actualCount = (actualCount != null && actualCount > 0) ? actualCount : null;
-
-            List<PredictionDaily> predictionResults;
-            if (subcategoryId != null) {
-                predictionResults = predictionDailyRepository.findLatestBySubcategoryAndDateRange(subcategoryId, startOfMonth, endOfMonth);
-            } else if (categoryId != null) {
-                predictionResults = predictionDailyRepository.findLatestByCategoryAndDateRange(categoryId, startOfMonth, endOfMonth);
-            } else {
-                predictionResults = predictionDailyRepository.findLatestByDateRange(startOfMonth, endOfMonth);
-            }
-
-            Integer predictCount = predictionResults.isEmpty() ? null :
-                    predictionResults.stream().mapToInt(PredictionDaily::getCount).sum();
-
-            graphData.add(
-                    new GraphDataResponseDto.GraphDetailDto(period, actualCount, predictCount)
-            );
+            String period = currentMonth.plusMonths(i).toString();
+            Integer actualCount = actualMap.getOrDefault(period, null);
+            Integer predictCount = predictMap.getOrDefault(period, null);
+            graphData.add(new GraphDataResponseDto.GraphDetailDto(period, actualCount, predictCount));
         }
 
         return new GraphDataResponseDto(graphData);

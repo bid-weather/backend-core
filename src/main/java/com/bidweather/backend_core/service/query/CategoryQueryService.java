@@ -1,39 +1,36 @@
 package com.bidweather.backend_core.service.query;
 
-import com.bidweather.backend_core.domain.Category;
-import com.bidweather.backend_core.domain.CategorySubcategory;
-import com.bidweather.backend_core.domain.Subcategory;
-import com.bidweather.backend_core.dto.response.CategoryResponseDto;
-import com.bidweather.backend_core.dto.response.SubcategoryResponseDto;
+import com.bidweather.backend_core.dto.response.CategoryListResponseDto;
+import com.bidweather.backend_core.dto.response.SubcategoryListResponseDto;
 import com.bidweather.backend_core.repository.CategoryRepository;
+import com.bidweather.backend_core.repository.CategorySubcategoryRepository;
+import com.bidweather.backend_core.repository.SubcategoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CategoryQueryService {
     private final CategoryRepository categoryRepository;
+    private final CategorySubcategoryRepository categorySubcategoryRepository;
 
-    public CategoryResponseDto<String> getAllCategories() {
-        List<String> categoryNames = categoryRepository.findAll().stream()
-                .map(Category::getCategoryName)
+    public CategoryListResponseDto getAllCategories() {
+        List<CategoryListResponseDto.CategoryResponseDto> categories = categoryRepository.findAll()
+                .stream()
+                .map(CategoryListResponseDto.CategoryResponseDto::from)
                 .toList();
-        return new CategoryResponseDto<>(categoryNames);
+        return new CategoryListResponseDto(categories);
     }
 
-    public SubcategoryResponseDto<String> getSubcategoriesByCategoryId(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException());
-
-        List<String> subcategories = category.getCategorySubcategories().stream()
-                .map(CategorySubcategory::getSubcategory)
-                .map(Subcategory::getSubcategoryName)
+    public SubcategoryListResponseDto getSubcategoriesByCategoryId(Long categoryId) {
+        List<SubcategoryListResponseDto.SubcategoryResponseDto> subcategories = categorySubcategoryRepository.findSubcategoriesByCategoryId(categoryId)
+                .stream()
+                .map(SubcategoryListResponseDto.SubcategoryResponseDto::from)
                 .toList();
-
-        return new SubcategoryResponseDto<>(subcategories);
+        return new SubcategoryListResponseDto(subcategories);
     }
 }

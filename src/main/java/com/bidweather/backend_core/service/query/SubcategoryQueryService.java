@@ -1,7 +1,6 @@
 package com.bidweather.backend_core.service.query;
 
-import com.bidweather.backend_core.domain.Subcategory;
-import com.bidweather.backend_core.dto.response.SubcategoryResponseDto;
+import com.bidweather.backend_core.dto.response.SubcategoryListResponseDto;
 import com.bidweather.backend_core.repository.SubcategoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +14,11 @@ import java.util.List;
 public class SubcategoryQueryService {
     private final SubcategoryRepository subcategoryRepository;
 
-    public SubcategoryResponseDto<String> getAllSubcategories() {
-        List<String> subcategoryNames = subcategoryRepository.findAll().stream()
-                .map(Subcategory::getSubcategoryName)
+    public SubcategoryListResponseDto getAllSubcategories() {
+        List<SubcategoryListResponseDto.SubcategoryResponseDto> subcategories = subcategoryRepository.findAll()
+                .stream()
+                .map(SubcategoryListResponseDto.SubcategoryResponseDto::from)
                 .toList();
-        return new SubcategoryResponseDto<>(subcategoryNames);
+        return new SubcategoryListResponseDto(subcategories);
     }
 }

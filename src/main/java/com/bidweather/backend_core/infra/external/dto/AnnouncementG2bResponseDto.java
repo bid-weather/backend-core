@@ -1,7 +1,6 @@
 package com.bidweather.backend_core.infra.external.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.catalina.connector.Response;
 
 import java.util.List;
 

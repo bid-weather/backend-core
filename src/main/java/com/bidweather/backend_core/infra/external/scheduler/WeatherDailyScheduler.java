@@ -15,7 +15,7 @@ public class WeatherDailyScheduler {
 
     private final WeatherDailyBackfillService weatherDailyBackfillService;
 
-    @Scheduled(cron = "0 5 0 * * *")
+    @Scheduled(cron = "0 0 7 * * *")
     public void collectYesterdayWeather() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         log.info("========== [Scheduler] 날씨 데이터 수집 시작: {} ==========", yesterday);

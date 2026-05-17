@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.fasterxml.jackson.core.internal.shaded.fdp.v2_21_2.JavaBigDecimalParser.parseBigDecimal;
-
 public record WeatherKmaResponseDto(
         LocalDate date,
         BigDecimal maxWindSpeed,    // WS_MAX (6)

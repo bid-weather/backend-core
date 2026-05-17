@@ -9,6 +9,7 @@ public record WeatherResponseDto(
         BigDecimal maxTemp,
         BigDecimal minTemp,
         BigDecimal precipitation,
+        BigDecimal snow,
         BigDecimal humidity,
         BigDecimal dailyMaxWindSpeed
 ) {
@@ -18,6 +19,7 @@ public record WeatherResponseDto(
                 weather.getMaxTemp(),
                 weather.getMinTemp(),
                 weather.getPrecipitation(),
+                weather.getSnow(),
                 weather.getHumidity(),
                 weather.getDailyMaxWindSpeed()
         );

@@ -68,7 +68,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
     );
 
     @Query("""
-        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
+        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
                 CAST(COUNT(p) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end
@@ -85,7 +85,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
     );
 
     @Query("""
-        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
+        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
                 CAST(COUNT(p) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end
@@ -104,7 +104,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
     );
 
     @Query("""
-        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
+        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
                 CAST(COUNT(p) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end

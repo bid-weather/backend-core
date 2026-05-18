@@ -20,6 +20,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
             AND p.predictedAt = (
                 SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
                 WHERE p2.calendarDate.date = p.calendarDate.date
+                AND p2.category = p.category
                 AND p2.subcategory = p.subcategory
             )
             GROUP BY TO_CHAR(p.calendarDate.date, 'YYYY-MM')
@@ -38,6 +39,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
             AND p.predictedAt = (
                 SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
                 WHERE p2.calendarDate.date = p.calendarDate.date
+                AND p2.category = p.category
                 AND p2.subcategory = p.subcategory
             )
             GROUP BY TO_CHAR(p.calendarDate.date, 'YYYY-MM')
@@ -53,15 +55,18 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
                 CAST(COUNT(p) AS integer) AS count
             FROM PredictionDaily p
             WHERE p.calendarDate.date BETWEEN :start AND :end
+            AND p.category.id = :categoryId
             AND p.subcategory.id = :subcategoryId
             AND p.predictedAt = (
                 SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
                 WHERE p2.calendarDate.date = p.calendarDate.date
+                AND p2.category = p.category
                 AND p2.subcategory = p.subcategory
             )
             GROUP BY TO_CHAR(p.calendarDate.date, 'YYYY-MM')
             """)
-    List<MonthlyCountProjection> findLatestBySubcategoryAndDateRange(
+    List<MonthlyCountProjection> findLatestByCategoryAndSubcategoryAndDateRange(
+            @Param("categoryId") Long categoryId,
             @Param("subcategoryId") Long subcategoryId,
             @Param("start") LocalDate start,
             @Param("end") LocalDate end
@@ -75,6 +80,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
         AND p.predictedAt = (
             SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
             WHERE p2.calendarDate.date = p.calendarDate.date
+            AND p2.category = p.category
             AND p2.subcategory = p.subcategory
         )
         GROUP BY p.calendarDate.date
@@ -93,6 +99,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
         AND p.predictedAt = (
             SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
             WHERE p2.calendarDate.date = p.calendarDate.date
+            AND p2.category = p.category
             AND p2.subcategory = p.subcategory
         )
         GROUP BY p.calendarDate.date
@@ -108,15 +115,18 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
                 CAST(COUNT(p) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end
+        AND p.category.id = :categoryId
         AND p.subcategory.id = :subcategoryId
         AND p.predictedAt = (
             SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
             WHERE p2.calendarDate.date = p.calendarDate.date
+            AND p2.category = p.category
             AND p2.subcategory = p.subcategory
         )
         GROUP BY p.calendarDate.date
         """)
-    List<DailyCountProjection> findLatestDailyBySubcategoryAndDateRange(
+    List<DailyCountProjection> findLatestDailyByCategoryAndSubcategoryAndDateRange(
+            @Param("categoryId") Long categoryId,
             @Param("subcategoryId") Long subcategoryId,
             @Param("start") LocalDate start,
             @Param("end") LocalDate end

@@ -43,11 +43,13 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
             SELECT TO_CHAR(a.calendarDate.date, 'YYYY-MM') AS period,
                         CAST(COUNT(a) AS integer) AS count
             FROM Announcement a
-            WHERE a.subcategory.id = :subcategoryId
+            WHERE a.category.id = :categoryId
+            AND a.subcategory.id = :subcategoryId
             AND a.calendarDate.date BETWEEN :start AND :end
             GROUP BY TO_CHAR(a.calendarDate.date, 'YYYY-MM')
             """)
-    List<MonthlyCountProjection> countBySubcategoryAndDateRange(
+    List<MonthlyCountProjection> countByCategoryAndSubcategoryAndDateRange(
+            @Param("categoryId") Long categoryId,
             @Param("subcategoryId") Long subcategoryId,
             @Param("start") LocalDate start,
             @Param("end") LocalDate end

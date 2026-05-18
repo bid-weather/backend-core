@@ -31,8 +31,8 @@ public class PredictionQueryService {
         LocalDate end = start.plusMonths(1).minusDays(1);
 
         List<DailyCountProjection> results;
-        if (subcategoryId != null) {
-            results = predictionDailyRepository.findLatestDailyBySubcategoryAndDateRange(subcategoryId, start, end);
+        if (subcategoryId != null && categoryId != null) {
+            results = predictionDailyRepository.findLatestDailyByCategoryAndSubcategoryAndDateRange(categoryId, subcategoryId, start, end);
         } else if (categoryId != null) {
             results = predictionDailyRepository.findLatestDailyByCategoryAndDateRange(categoryId, start, end);
         } else {
@@ -54,8 +54,8 @@ public class PredictionQueryService {
         LocalDate end = currentMonth.atEndOfMonth();
 
         List<MonthlyCountProjection> actualResults;
-        if (subcategoryId != null) {
-            actualResults = announcementRepository.countBySubcategoryAndDateRange(subcategoryId, start, end);
+        if (subcategoryId != null && categoryId != null) {
+            actualResults = announcementRepository.countByCategoryAndSubcategoryAndDateRange(categoryId, subcategoryId, start, end);
         } else if (categoryId != null) {
             actualResults = announcementRepository.countByCategoryAndDateRange(categoryId, start, end);
         } else {
@@ -63,8 +63,8 @@ public class PredictionQueryService {
         }
 
         List<MonthlyCountProjection> predictResults;
-        if (subcategoryId != null) {
-            predictResults = predictionDailyRepository.findLatestBySubcategoryAndDateRange(subcategoryId, start, end);
+        if (subcategoryId != null && categoryId != null) {
+            predictResults = predictionDailyRepository.findLatestByCategoryAndSubcategoryAndDateRange(categoryId, subcategoryId, start, end);
         } else if (categoryId != null) {
             predictResults = predictionDailyRepository.findLatestByCategoryAndDateRange(categoryId, start, end);
         } else {

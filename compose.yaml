@@ -48,7 +48,7 @@ services:
   postgres:
     image: 'pgvector/pgvector:pg17'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     environment:
       - 'POSTGRES_DB=${DB_NAME}'
       - 'POSTGRES_PASSWORD=${DB_PASSWORD}'

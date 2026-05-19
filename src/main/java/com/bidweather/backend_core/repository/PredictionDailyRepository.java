@@ -14,7 +14,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
 
     @Query("""
             SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
-                CAST(COUNT(p) AS integer) AS count
+                CAST(SUM(p.count) AS integer) AS count
             FROM PredictionDaily p
             WHERE p.calendarDate.date BETWEEN :start AND :end
             AND p.predictedAt = (
@@ -32,7 +32,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
 
     @Query("""
             SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
-                CAST(COUNT(p) AS integer) AS count
+                CAST(SUM(p.count) AS integer) AS count
             FROM PredictionDaily p
             WHERE p.calendarDate.date BETWEEN :start AND :end
             AND p.category.id = :categoryId
@@ -52,7 +52,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
 
     @Query("""
             SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
-                CAST(COUNT(p) AS integer) AS count
+                CAST(SUM(p.count) AS integer) AS count
             FROM PredictionDaily p
             WHERE p.calendarDate.date BETWEEN :start AND :end
             AND p.category.id = :categoryId
@@ -74,7 +74,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
 
     @Query("""
         SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
-                CAST(COUNT(p) AS integer) AS count
+                CAST(SUM(p.count) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end
         AND p.predictedAt = (
@@ -92,7 +92,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
 
     @Query("""
         SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
-                CAST(COUNT(p) AS integer) AS count
+                CAST(SUM(p.count) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end
         AND p.category.id = :categoryId
@@ -112,7 +112,7 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
 
     @Query("""
         SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
-                CAST(COUNT(p) AS integer) AS count
+                CAST(SUM(p.count) AS integer) AS count
         FROM PredictionDaily p
         WHERE p.calendarDate.date BETWEEN :start AND :end
         AND p.category.id = :categoryId

@@ -36,7 +36,7 @@ services:
       - TZ=Asia/Seoul
       - PYTHONUNBUFFERED=1
     volumes:
-        - ../ai-inference-server/app/weights:/app/app/weights
+        - ../ai-inference-server/app/weights:/app/weights
     depends_on:
       postgres:
         condition: service_healthy

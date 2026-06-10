@@ -13,6 +13,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .servers(List.of(new Server().url("https://15.164.120.126")));
+                .servers(List.of(new Server().url("https://34.64.158.229")));
     }
 }

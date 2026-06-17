@@ -26,7 +26,7 @@ public class PredictionDaily {
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subcategory_id", nullable = false)
+    @JoinColumn(name = "subcategory_id", nullable = true)
     private Subcategory subcategory;
 
     @Column(nullable = false)

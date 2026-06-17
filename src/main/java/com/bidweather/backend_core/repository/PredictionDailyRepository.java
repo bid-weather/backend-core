@@ -12,59 +12,53 @@ import java.util.List;
 
 public interface PredictionDailyRepository extends JpaRepository<PredictionDaily, Long> {
 
-    @Query("""
-            SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
-                CAST(SUM(p.count) AS integer) AS count
-            FROM PredictionDaily p
-            WHERE p.calendarDate.date BETWEEN :start AND :end
-            AND p.predictedAt = (
-                SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
-                WHERE p2.calendarDate.date = p.calendarDate.date
-                AND p2.category = p.category
-                AND p2.subcategory = p.subcategory
-            )
-            GROUP BY TO_CHAR(p.calendarDate.date, 'YYYY-MM')
-            """)
+    @Query(value = """
+            SELECT TO_CHAR(date, 'YYYY-MM') AS period, CAST(SUM(count) AS integer) AS count
+            FROM (
+                SELECT date, count,
+                       ROW_NUMBER() OVER (PARTITION BY date, category_id, subcategory_id ORDER BY predicted_at DESC) AS rn
+                FROM prediction_daily
+                WHERE date BETWEEN :start AND :end
+            ) ranked
+            WHERE rn = 1
+            GROUP BY TO_CHAR(date, 'YYYY-MM')
+            """, nativeQuery = true)
     List<MonthlyCountProjection> findLatestByDateRange(
             @Param("start") LocalDate start,
             @Param("end") LocalDate end
     );
 
-    @Query("""
-            SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
-                CAST(SUM(p.count) AS integer) AS count
-            FROM PredictionDaily p
-            WHERE p.calendarDate.date BETWEEN :start AND :end
-            AND p.category.id = :categoryId
-            AND p.predictedAt = (
-                SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
-                WHERE p2.calendarDate.date = p.calendarDate.date
-                AND p2.category = p.category
-                AND p2.subcategory = p.subcategory
-            )
-            GROUP BY TO_CHAR(p.calendarDate.date, 'YYYY-MM')
-            """)
+    @Query(value = """
+            SELECT TO_CHAR(date, 'YYYY-MM') AS period, CAST(SUM(count) AS integer) AS count
+            FROM (
+                SELECT date, count,
+                       ROW_NUMBER() OVER (PARTITION BY date, category_id, subcategory_id ORDER BY predicted_at DESC) AS rn
+                FROM prediction_daily
+                WHERE date BETWEEN :start AND :end
+                AND category_id = :categoryId
+            ) ranked
+            WHERE rn = 1
+            GROUP BY TO_CHAR(date, 'YYYY-MM')
+            """, nativeQuery = true)
     List<MonthlyCountProjection> findLatestByCategoryAndDateRange(
             @Param("categoryId") Long categoryId,
             @Param("start") LocalDate start,
             @Param("end") LocalDate end
     );
 
-    @Query("""
-            SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM') AS period,
-                CAST(SUM(p.count) AS integer) AS count
-            FROM PredictionDaily p
-            WHERE p.calendarDate.date BETWEEN :start AND :end
-            AND p.category.id = :categoryId
-            AND p.subcategory.id = :subcategoryId
-            AND p.predictedAt = (
-                SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
-                WHERE p2.calendarDate.date = p.calendarDate.date
-                AND p2.category = p.category
-                AND p2.subcategory = p.subcategory
-            )
-            GROUP BY TO_CHAR(p.calendarDate.date, 'YYYY-MM')
-            """)
+    @Query(value = """
+            SELECT TO_CHAR(date, 'YYYY-MM') AS period, CAST(SUM(count) AS integer) AS count
+            FROM (
+                SELECT date, count,
+                       ROW_NUMBER() OVER (PARTITION BY date, category_id, subcategory_id ORDER BY predicted_at DESC) AS rn
+                FROM prediction_daily
+                WHERE date BETWEEN :start AND :end
+                AND category_id = :categoryId
+                AND subcategory_id = :subcategoryId
+            ) ranked
+            WHERE rn = 1
+            GROUP BY TO_CHAR(date, 'YYYY-MM')
+            """, nativeQuery = true)
     List<MonthlyCountProjection> findLatestByCategoryAndSubcategoryAndDateRange(
             @Param("categoryId") Long categoryId,
             @Param("subcategoryId") Long subcategoryId,
@@ -72,59 +66,53 @@ public interface PredictionDailyRepository extends JpaRepository<PredictionDaily
             @Param("end") LocalDate end
     );
 
-    @Query("""
-        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
-                CAST(SUM(p.count) AS integer) AS count
-        FROM PredictionDaily p
-        WHERE p.calendarDate.date BETWEEN :start AND :end
-        AND p.predictedAt = (
-            SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
-            WHERE p2.calendarDate.date = p.calendarDate.date
-            AND p2.category = p.category
-            AND p2.subcategory = p.subcategory
-        )
-        GROUP BY p.calendarDate.date
-        """)
+    @Query(value = """
+            SELECT date AS period, CAST(SUM(count) AS integer) AS count
+            FROM (
+                SELECT date, count,
+                       ROW_NUMBER() OVER (PARTITION BY date, category_id, subcategory_id ORDER BY predicted_at DESC) AS rn
+                FROM prediction_daily
+                WHERE date BETWEEN :start AND :end
+            ) ranked
+            WHERE rn = 1
+            GROUP BY date
+            """, nativeQuery = true)
     List<DailyCountProjection> findLatestDailyByDateRange(
             @Param("start") LocalDate start,
             @Param("end") LocalDate end
     );
 
-    @Query("""
-        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
-                CAST(SUM(p.count) AS integer) AS count
-        FROM PredictionDaily p
-        WHERE p.calendarDate.date BETWEEN :start AND :end
-        AND p.category.id = :categoryId
-        AND p.predictedAt = (
-            SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
-            WHERE p2.calendarDate.date = p.calendarDate.date
-            AND p2.category = p.category
-            AND p2.subcategory = p.subcategory
-        )
-        GROUP BY p.calendarDate.date
-        """)
+    @Query(value = """
+            SELECT date AS period, CAST(SUM(count) AS integer) AS count
+            FROM (
+                SELECT date, count,
+                       ROW_NUMBER() OVER (PARTITION BY date, category_id, subcategory_id ORDER BY predicted_at DESC) AS rn
+                FROM prediction_daily
+                WHERE date BETWEEN :start AND :end
+                AND category_id = :categoryId
+            ) ranked
+            WHERE rn = 1
+            GROUP BY date
+            """, nativeQuery = true)
     List<DailyCountProjection> findLatestDailyByCategoryAndDateRange(
             @Param("categoryId") Long categoryId,
             @Param("start") LocalDate start,
             @Param("end") LocalDate end
     );
 
-    @Query("""
-        SELECT TO_CHAR(p.calendarDate.date, 'YYYY-MM-DD') AS period,
-                CAST(SUM(p.count) AS integer) AS count
-        FROM PredictionDaily p
-        WHERE p.calendarDate.date BETWEEN :start AND :end
-        AND p.category.id = :categoryId
-        AND p.subcategory.id = :subcategoryId
-        AND p.predictedAt = (
-            SELECT MAX(p2.predictedAt) FROM PredictionDaily p2
-            WHERE p2.calendarDate.date = p.calendarDate.date
-            AND p2.category = p.category
-            AND p2.subcategory = p.subcategory
-        )
-        GROUP BY p.calendarDate.date
-        """)
+    @Query(value = """
+            SELECT date AS period, CAST(SUM(count) AS integer) AS count
+            FROM (
+                SELECT date, count,
+                       ROW_NUMBER() OVER (PARTITION BY date, category_id, subcategory_id ORDER BY predicted_at DESC) AS rn
+                FROM prediction_daily
+                WHERE date BETWEEN :start AND :end
+                AND category_id = :categoryId
+                AND subcategory_id = :subcategoryId
+            ) ranked
+            WHERE rn = 1
+            GROUP BY date
+            """, nativeQuery = true)
     List<DailyCountProjection> findLatestDailyByCategoryAndSubcategoryAndDateRange(
             @Param("categoryId") Long categoryId,
             @Param("subcategoryId") Long subcategoryId,
